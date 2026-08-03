@@ -1,0 +1,9 @@
+{
+  "name": "Gaudi AI Horse Predictor Pro",
+  "short_name": "Gaudi Predictor",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#061225",
+  "theme_color": "#061225",
+  "icons": []
+}

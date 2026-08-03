@@ -1,60 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#071427" />
   <title>Gaudi AI Horse Predictor Pro</title>
-  <style>
-    body{
-      font-family:Arial,sans-serif;
-      background:#0f172a;
-      color:white;
-      text-align:center;
-      padding:30px;
-    }
-    h1{color:#00ff99;}
-    button{
-      padding:15px 30px;
-      background:#00b894;
-      color:white;
-      border:none;
-      border-radius:10px;
-      font-size:18px;
-      cursor:pointer;
-    }
-    button:hover{
-      background:#019875;
-    }
-    #result{
-      margin-top:25px;
-      font-size:20px;
-      color:#ffd700;
-    }
-  </style>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">GAUDI RACING ANALYSIS</p>
+      <h1>🏇 Gaudi AI Horse Predictor Pro</h1>
+      <p class="subtitle">Paste TABPG race information, upload screenshots, enter visible runners and produce ranked selections.</p>
+    </div>
+    <div class="status-pill">Local analysis • No login required</div>
+  </header>
 
-<h1>🏇 Gaudi AI Horse Predictor Pro</h1>
+  <main>
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>1. Racing sources</h2>
+          <p>Select the sources you reviewed. Buttons open each source in a new tab.</p>
+        </div>
+      </div>
+      <div id="sources" class="source-grid"></div>
+    </section>
 
-<p>Welcome to your AI Horse Racing Predictor.</p>
+    <section class="card">
+      <h2>2. Race information</h2>
+      <div class="form-grid">
+        <label>Track<input id="track" placeholder="Example: Belmont" /></label>
+        <label>Race number<input id="raceNo" placeholder="Example: 5" /></label>
+        <label>Distance<input id="distance" placeholder="Example: 1200m" /></label>
+        <label>Track condition
+          <select id="condition">
+            <option>Good</option><option>Soft</option><option>Heavy</option>
+            <option>Synthetic</option><option>Unknown</option>
+          </select>
+        </label>
+      </div>
 
-<button onclick="predict()">Generate Prediction</button>
+      <label class="full">Paste TABPG or racecard information
+        <textarea id="raceText" rows="7" placeholder="Paste visible horse numbers, names, odds, form, weights, barriers, jockey and trainer information here."></textarea>
+      </label>
 
-<div id="result"></div>
+      <div class="upload-box">
+        <input id="screenshot" type="file" accept="image/*" />
+        <div>
+          <strong>Screenshot upload and preview</strong>
+          <p>The browser previews the image. For dependable analysis, enter the visible runner details in the table below.</p>
+        </div>
+      </div>
+      <img id="preview" class="preview hidden" alt="Race screenshot preview" />
+    </section>
 
-<script>
-function predict(){
-    const picks=[
-      "Win: Horse 1 | Exacta: 1-4 | Trifecta: 1-4-7",
-      "Win: Horse 3 | Exacta: 3-6 | Trifecta: 3-6-2",
-      "Win: Horse 5 | Exacta: 5-2 | Trifecta: 5-2-8",
-      "Win: Horse 7 | Exacta: 7-1 | Trifecta: 7-1-4"
-    ];
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>3. Visible runners</h2>
+          <p>Add only the runners shown in your TABPG screenshot.</p>
+        </div>
+        <button id="addRunner" class="secondary">+ Add runner</button>
+      </div>
 
-    document.getElementById("result").innerHTML =
-      picks[Math.floor(Math.random()*picks.length)];
-}
-</script>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Horse</th><th>Odds</th><th>Recent form</th><th>Barrier</th>
+              <th>Weight</th><th>Jockey</th><th>Trainer</th><th>Track/Distance</th>
+              <th>Market move</th><th>Scratched</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="runnerRows"></tbody>
+        </table>
+      </div>
 
+      <div class="actions">
+        <button id="analyse" class="primary">Analyse Race</button>
+        <button id="clear" class="ghost">Clear</button>
+      </div>
+      <p class="disclaimer">Predictions are estimates, not guarantees. Horse racing involves risk. Check scratchings and current odds before betting.</p>
+    </section>
+
+    <section id="resultsCard" class="card hidden">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">ANALYSIS RESULT</p>
+          <h2 id="resultHeading">Race selections</h2>
+        </div>
+        <button id="copyResults" class="secondary">Copy summary</button>
+      </div>
+
+      <div class="risk-row">
+        <div><span>Confidence</span><strong id="confidence">—</strong></div>
+        <div><span>Race risk</span><strong id="risk">—</strong></div>
+      </div>
+
+      <div id="rankings" class="ranking-grid"></div>
+
+      <div class="bet-grid">
+        <article><span>Single Win</span><strong id="singleWin">—</strong></article>
+        <article><span>Exacta</span><strong id="exacta">—</strong></article>
+        <article><span>Exacta Box</span><strong id="exactaBox">—</strong></article>
+        <article><span>Trifecta</span><strong id="trifecta">—</strong></article>
+        <article><span>Trifecta Box</span><strong id="trifectaBox">—</strong></article>
+        <article><span>Best outsider</span><strong id="outsider">—</strong></article>
+      </div>
+
+      <h3>Exactly four First 4 combinations</h3>
+      <ol id="first4" class="first4"></ol>
+
+      <details>
+        <summary>Previous-result comparison</summary>
+        <div class="form-grid compact">
+          <label>Official finishing order<input id="officialResult" placeholder="Example: 5, 4, 7, 1" /></label>
+          <button id="compare" class="secondary align-end">Compare result</button>
+        </div>
+        <div id="comparison"></div>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    Created for Malai Pomat • Gaudi AI Horse Predictor Pro
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

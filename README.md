@@ -1,15 +1,23 @@
-# Gaudi AI Horse Predictor Pro
+# Gaudi AI Horse Predictor Pro v3
 
-AI Horse Racing Predictor with OCR, Screenshot Analysis, Win, Exacta, Trifecta and First 4 Predictions.
+Static, mobile-friendly GitHub Pages application.
 
-## Features
-- OCR Screenshot Reader
-- AI Horse Ranking
-- Win Prediction
-- Exacta Prediction
-- Trifecta Prediction
-- First 4 Prediction
-- Mobile Friendly
-- GitHub Pages Ready
+## Included
+- Racing source links and source checklist
+- TABPG/racecard text area
+- Screenshot upload and preview
+- Manual visible-runner entry
+- Local weighted ranking
+- Top three selections
+- Single Win, Exacta, Exacta Box
+- Trifecta, Trifecta Box
+- Exactly four First 4 combinations
+- Best outsider
+- Confidence and race-risk rating
+- Previous-result comparison
 
-Created by Malai Pomat
+## Important limitation
+GitHub Pages is a static host. This package does not automatically scrape racing websites or perform dependable OCR by itself. It analyzes the runner information entered by the user. Automatic website data collection and server-side AI would require authorized APIs and a secure backend.
+
+## Upload
+Upload all files from this folder into the root of your GitHub repository. Do not upload only the ZIP file.
